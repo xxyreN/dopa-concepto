@@ -92,9 +92,45 @@
     setTimeout(ready, 200);
   }
 
+  // --- SCROLL REVEAL ---
+  function initReveal() {
+    const selectors = [
+      '.pioneer-title', '.pioneer-body', '.pioneer-stats',
+      '.origin-head', '.origin-cell',
+      '.trio-head > div', '.trio-note', '.trio-card',
+      '.cultura-tease-inner > div', '.cultura-collage .photo',
+      '.visit-card', '.visit-map', '.visit-grid', '.marquee',
+      '.carta-hero-grid > *', '.carta-note', '.carta-nav',
+      '.carta-section-head', '.item', '.legend',
+      '.cult-hero-sub', '.program-head', '.prog',
+      '.ied-inner > div', '.ied-poster',
+      '.walk-head', '.walk-map', '.walk-stops .s',
+      '.circulo-inner > div', '.voice',
+      '.vis-hero .card', '.bigmap', '.info-card',
+      '.transit h2', '.transit-card',
+      '.reserve-inner > div', '.faq h2', '.faq-item'
+    ];
+    const els = document.querySelectorAll(selectors.join(','));
+    els.forEach(el => el.classList.add('reveal'));
+    if (!('IntersectionObserver' in window)) {
+      els.forEach(el => el.classList.add('in'));
+      return;
+    }
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('in');
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    els.forEach(el => io.observe(el));
+  }
+
   // --- IMAGE FALLBACK: display filename in ph-tag when image missing ---
   document.addEventListener('DOMContentLoaded', function () {
     syncLangButtons();
+    initReveal();
     document.querySelectorAll('[data-bg]').forEach(el => {
       const src = el.getAttribute('data-bg');
       if (!src) return;
